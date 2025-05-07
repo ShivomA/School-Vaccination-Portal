@@ -7,6 +7,8 @@ import { useAuth } from "./components/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
+import AddStudent from "./pages/AddStudent";
+import EditStudent from "./pages/EditStudent";
 import VaccinationDrives from "./pages/VaccinationDrives";
 import Reports from "./pages/Reports";
 
@@ -40,6 +42,22 @@ function App() {
           element={
             <PrivateRoute>
               <Students />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/students/add"
+          element={
+            <PrivateRoute>
+              <AddStudent />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/students/edit/:id"
+          element={
+            <PrivateRoute>
+              <EditStudent />
             </PrivateRoute>
           }
         />
