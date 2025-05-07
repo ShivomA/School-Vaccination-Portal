@@ -15,10 +15,23 @@ const useAppStore = create((set) => ({
     return "Student updated successfully";
   },
 
-  // Vaccine drive state
-  drives: [],
-  setDrives: (drives) => set({ drives }),
-  addDrive: (drive) => set((state) => ({ drives: [...state.drives, drive] })),
+  // Vaccination drive state
+  vaccinationDrives: [],
+  setVaccinationDrives: (vaccinationDrives) => set({ vaccinationDrives }),
+  addVaccinationDriveToStore: (vaccinationDrive) => {
+    set((state) => ({
+      vaccinationDrives: [...state.vaccinationDrives, vaccinationDrive],
+    }));
+    return "Vaccination drive added successfully";
+  },
+  updateVaccinationDriveInStore: (id, vaccinationDrive) => {
+    set((state) => ({
+      vaccinationDrives: state.vaccinationDrives.map((vd) =>
+        vd.id === id ? vaccinationDrive : vd
+      ),
+    }));
+    return "Vaccination drive updated successfully";
+  },
 }));
 
 export default useAppStore;

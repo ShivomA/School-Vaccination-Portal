@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import useAppStore from "../store/useAppStore";
-import StudentForm from "../components/StudentForm";
+import useAppStore from "../../store/useAppStore";
+import StudentForm from "../../components/StudentForm";
 
-import { addStudentToDB } from "../api/students";
+import { addStudentToDB } from "../../api/students";
 
 const AddStudent = () => {
   const navigate = useNavigate();

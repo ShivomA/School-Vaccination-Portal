@@ -6,10 +6,15 @@ import { useAuth } from "./components/AuthContext";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import Students from "./pages/Students";
-import AddStudent from "./pages/AddStudent";
-import EditStudent from "./pages/EditStudent";
-import VaccinationDrives from "./pages/VaccinationDrives";
+
+import Students from "./pages/students/Students";
+import AddStudent from "./pages/students/AddStudent";
+import EditStudent from "./pages/students/EditStudent";
+
+import VaccinationDrives from "./pages/vaccinationDrives/VaccinationDrives";
+import AddVaccinationDrive from "./pages/vaccinationDrives/AddVaccinationDrive";
+import EditVaccinationDrive from "./pages/vaccinationDrives/EditVaccinationDrive";
+
 import Reports from "./pages/Reports";
 
 import NotFound from "./pages/NotFound";
@@ -37,6 +42,8 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* Students */}
         <Route
           path="/students"
           element={
@@ -61,6 +68,8 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* Vaccination drives */}
         <Route
           path="/vaccination-drives"
           element={
@@ -69,6 +78,23 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/vaccination-drives/add"
+          element={
+            <PrivateRoute>
+              <AddVaccinationDrive />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/vaccination-drives/edit/:id"
+          element={
+            <PrivateRoute>
+              <EditVaccinationDrive />
+            </PrivateRoute>
+          }
+        />
+
         <Route
           path="/reports"
           element={

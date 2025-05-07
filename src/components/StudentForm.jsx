@@ -11,8 +11,7 @@ const StudentForm = ({ student, onSubmit }) => {
     guardianName: student?.guardianName || "",
     contactNumber: student?.contactNumber || "",
     address: student?.address || "",
-    vaccineTaken: student?.vaccineTaken || "",
-    lastUpdated: student?.lastUpdated || "",
+    vaccineTaken: student?.vaccineTaken?.join(", ") || "",
   });
 
   useEffect(() => {
@@ -26,8 +25,7 @@ const StudentForm = ({ student, onSubmit }) => {
         guardianName: student.guardianName || "",
         contactNumber: student.contactNumber || "",
         address: student.address || "",
-        vaccineTaken: student.vaccineTaken || "",
-        lastUpdated: student.lastUpdated || "",
+        vaccineTaken: student.vaccineTaken?.join(", ") || "",
       });
     }
   }, [student]);
@@ -131,7 +129,7 @@ const StudentForm = ({ student, onSubmit }) => {
         <input
           type="text"
           name="vaccineTaken"
-          value={formData.vaccineTaken} // Format as comma-separated
+          value={formData.vaccineTaken}
           onChange={handleChange}
         />
       </div>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import useAppStore from "../store/useAppStore";
-import StudentCard from "../components/StudentCard";
+import useAppStore from "../../store/useAppStore";
+import StudentCard from "../../components/StudentCard";
 
-import { fetchStudentsFromDB } from "../api/students";
+import { fetchStudentsFromDB } from "../../api/students";
 
 const Students = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Students = () => {
         setLoading(false);
       }
     })();
-  }, [loading]);
+  });
 
   const handleAddClick = () => {
     navigate("./add"); // Navigate to /add route

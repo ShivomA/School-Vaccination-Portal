@@ -1,5 +1,41 @@
-const VaccinationDriveCard = () => {
-  return <div>Vaccination Drive Card</div>;
+import { useNavigate } from "react-router-dom";
+
+const VaccinationDriveCard = ({ vaccinationDrive }) => {
+  const navigate = useNavigate();
+
+  const handleEditClick = () => {
+    navigate(`./edit/${vaccinationDrive.id}`); // Navigate to /edit/:id route
+  };
+
+  return (
+    <div>
+      <div>
+        <span>Name: </span>
+        <span>{vaccinationDrive.name}</span>
+      </div>
+      <div>
+        <span>Vaccine: </span>
+        <span>{vaccinationDrive.vaccineName}</span>
+      </div>
+      <div>
+        <span>Date: </span>
+        <span>{vaccinationDrive.driveDate}</span>
+      </div>
+      <div>
+        <span>Location: </span>
+        <span>{vaccinationDrive.location}</span>
+      </div>
+      <div>
+        <span>Eligible grades: </span>
+        <span>{vaccinationDrive.eligibleGrades?.join(", ")}</span>
+      </div>
+      <div>
+        <span>Available doses: </span>
+        <span>{vaccinationDrive.availableDoses}</span>
+      </div>
+      <button onClick={handleEditClick}>Edit</button>
+    </div>
+  );
 };
 
 export default VaccinationDriveCard;

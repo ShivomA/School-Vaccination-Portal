@@ -1,8 +1,8 @@
-const studentTemplate = {
+export const studentTemplate = {
   id: "",
   name: "",
   age: 0,
-  grade: "",
+  grade: 0,
   gender: "",
   guardianName: "",
   contactNumber: "",

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import useAppStore from "../store/useAppStore";
-import StudentForm from "../components/StudentForm";
+import useAppStore from "../../store/useAppStore";
+import StudentForm from "../../components/StudentForm";
 
-import { updateStudentToDB } from "../api/students";
+import { updateStudentToDB } from "../../api/students";
 
 const EditStudent = () => {
   const { id } = useParams();
