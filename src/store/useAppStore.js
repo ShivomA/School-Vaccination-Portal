@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
 const useAppStore = create((set) => ({
+  // Dashboard state
+  dashboardData: {},
+  setDashboardData: (dashboardData) => set({ dashboardData }),
+
   // Student state
   students: [],
   setStudents: (students) => set({ students }),

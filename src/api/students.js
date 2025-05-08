@@ -14,7 +14,10 @@ export const fetchStudentsFromDB = async () => {
       age: 1,
       grade: "1",
       gender: "Male",
-      vaccineTaken: ["a", "b"],
+      vaccineTaken: [
+        { name: "a", dateOfVaccination: "2025-06-12" },
+        { name: "b", dateOfVaccination: "2025-06-18" },
+      ],
     },
     {
       id: "2",
@@ -22,7 +25,10 @@ export const fetchStudentsFromDB = async () => {
       age: 2,
       grade: "2",
       gender: "Female",
-      vaccineTaken: ["b", "c"],
+      vaccineTaken: [
+        { name: "b", dateOfVaccination: "2025-07-12" },
+        { name: "c", dateOfVaccination: "2025-07-18" },
+      ],
     },
   ];
 

@@ -28,7 +28,11 @@ const StudentCard = ({ student }) => {
       {student.vaccineTaken && (
         <div>
           <span>Vaccination taken: </span>
-          <span>{student.vaccineTaken.join(", ")}</span>
+          <span>
+            {student.vaccineTaken
+              .map((v) => `${v.name} (${v.dateOfVaccination})`)
+              .join(", ")}
+          </span>
         </div>
       )}
       <button onClick={handleEditClick}>Edit</button>

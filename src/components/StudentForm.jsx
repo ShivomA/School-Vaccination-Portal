@@ -11,7 +11,6 @@ const StudentForm = ({ student, onSubmit }) => {
     guardianName: student?.guardianName || "",
     contactNumber: student?.contactNumber || "",
     address: student?.address || "",
-    vaccineTaken: student?.vaccineTaken?.join(", ") || "",
   });
 
   useEffect(() => {
@@ -25,7 +24,6 @@ const StudentForm = ({ student, onSubmit }) => {
         guardianName: student.guardianName || "",
         contactNumber: student.contactNumber || "",
         address: student.address || "",
-        vaccineTaken: student.vaccineTaken?.join(", ") || "",
       });
     }
   }, [student]);
@@ -45,18 +43,8 @@ const StudentForm = ({ student, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formattedVaccines = formData.vaccineTaken
-      .split(",")
-      .map((v) => v.trim())
-      .filter(Boolean);
-
-    const finalData = {
-      ...formData,
-      vaccineTaken: formattedVaccines,
-    };
-
     // Pass the final data to the onSubmit handler (Add or Update)
-    onSubmit(finalData);
+    onSubmit(formData);
   };
 
   return (
@@ -129,15 +117,6 @@ const StudentForm = ({ student, onSubmit }) => {
           type="text"
           name="address"
           value={formData.address}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Vaccine Taken: </label>
-        <input
-          type="text"
-          name="vaccineTaken"
-          value={formData.vaccineTaken}
           onChange={handleChange}
         />
       </div>

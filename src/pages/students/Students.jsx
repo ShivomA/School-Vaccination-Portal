@@ -34,7 +34,7 @@ const Students = () => {
         ? student.gender === filters.gender
         : true;
       const matchVaccine = filters.vaccineTaken
-        ? student.vaccineTaken.includes(filters.vaccineTaken)
+        ? student.vaccineTaken.map((v) => v.name).includes(filters.vaccineTaken)
         : true;
 
       return (

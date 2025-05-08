@@ -7,7 +7,7 @@ export const studentTemplate = {
   guardianName: "",
   contactNumber: "",
   address: "",
-  vaccineTaken: [], // Array of vaccine names or IDs
+  vaccineTaken: [], // Array of vaccine {name, dateOfVaccination}
   lastUpdated: "", // ISO Date format
 };
 
