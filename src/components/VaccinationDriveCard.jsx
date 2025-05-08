@@ -10,8 +10,8 @@ const VaccinationDriveCard = ({ vaccinationDrive }) => {
   return (
     <div>
       <div>
-        <span>Name: </span>
-        <span>{vaccinationDrive.name}</span>
+        <span>Drive name: </span>
+        <span>{vaccinationDrive.driveName}</span>
       </div>
       <div>
         <span>Vaccine: </span>
@@ -26,8 +26,8 @@ const VaccinationDriveCard = ({ vaccinationDrive }) => {
         <span>{vaccinationDrive.location}</span>
       </div>
       <div>
-        <span>Eligible grades: </span>
-        <span>{vaccinationDrive.eligibleGrades?.join(", ")}</span>
+        <span>Applicable grades: </span>
+        <span>{vaccinationDrive.applicableGrades?.join(", ")}</span>
       </div>
       <div>
         <span>Available doses: </span>

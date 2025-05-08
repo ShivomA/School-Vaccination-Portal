@@ -10,20 +10,20 @@ export const fetchVaccinationDrivesFromDB = async () => {
   const dummyVaccinationDrives = [
     {
       id: "1",
-      name: "Drive one",
+      driveName: "Drive one",
       vaccineName: "Vaccine one",
       driveDate: "2025-06-12",
       location: "Ground",
-      eligibleGrades: [1, 2, 3],
+      applicableGrades: ["1", "2", "3"],
       availableDoses: 100,
     },
     {
       id: "2",
-      name: "Drive two",
+      driveName: "Drive two",
       vaccineName: "Vaccine two",
       driveDate: "2025-06-24",
       location: "Common area",
-      eligibleGrades: [5, 6],
+      applicableGrades: ["3", "4", "5"],
       availableDoses: 80,
     },
   ];

@@ -1,11 +1,11 @@
 export const vaccineDriveTemplate = {
   id: "",
-  name: "",
+  driveName: "",
   description: "",
   vaccineName: "",
   driveDate: "", // ISO Date format (string)
   location: "",
-  eligibleGrades: [], // Array of grades, e.g., [6, 7, 8]
+  applicableGrades: [], // Array of grades
   vaccinatedStudentIds: [], // Array of student IDs who are vaccinated
   availableDoses: 0,
   createdAt: "", // ISO Date format
@@ -13,11 +13,11 @@ export const vaccineDriveTemplate = {
 };
 
 const VACCINATION_DRIVE_REQUIRED_FIELDS = [
-  "name",
+  "driveName",
   "vaccineName",
   "driveDate",
   "location",
-  "eligibleGrades",
+  "applicableGrades",
   "availableDoses",
 ];
 

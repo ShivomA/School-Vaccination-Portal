@@ -2,7 +2,7 @@ export const studentTemplate = {
   id: "",
   name: "",
   age: 0,
-  grade: 0,
+  grade: "",
   gender: "",
   guardianName: "",
   contactNumber: "",

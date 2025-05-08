@@ -4,12 +4,12 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
   // Initialize the state with the vaccination drive template and empty values
   const [formData, setFormData] = useState({
     id: vaccinationDrive?.id || "",
-    name: vaccinationDrive?.name || "",
+    driveName: vaccinationDrive?.driveName || "",
     description: vaccinationDrive?.description || "",
     vaccineName: vaccinationDrive?.vaccineName || "",
     driveDate: vaccinationDrive?.driveDate || "",
     location: vaccinationDrive?.location || "",
-    eligibleGrades: vaccinationDrive?.eligibleGrades?.join(", ") || "",
+    applicableGrades: vaccinationDrive?.applicableGrades?.join(", ") || "",
     availableDoses: vaccinationDrive?.availableDoses || "",
   });
 
@@ -17,20 +17,23 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
     if (vaccinationDrive) {
       setFormData({
         id: vaccinationDrive.id,
-        name: vaccinationDrive.name,
+        driveName: vaccinationDrive.driveName,
         description: vaccinationDrive.description || "",
         vaccineName: vaccinationDrive.vaccineName,
         driveDate: vaccinationDrive.driveDate || "",
         location: vaccinationDrive.location,
-        eligibleGrades: vaccinationDrive.eligibleGrades.join(", "),
+        applicableGrades: vaccinationDrive.applicableGrades.join(", "),
         availableDoses: vaccinationDrive.availableDoses,
       });
     }
   }, [vaccinationDrive]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    console.log(value);
+    let { type, name, value } = e.target;
+    if (type === "number" && value !== "") {
+      value = parseInt(value, 10);
+    }
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -40,14 +43,14 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formattedEligibleGrades = formData.eligibleGrades
+    const formattedApplicableGrades = formData.applicableGrades
       .split(",")
       .map((v) => v.trim())
       .filter(Boolean);
 
     const finalData = {
       ...formData,
-      eligibleGrades: formattedEligibleGrades,
+      applicableGrades: formattedApplicableGrades,
     };
 
     // Pass the final data to the onSubmit handler (Add or Update)
@@ -57,11 +60,11 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>*Name: </label>
+        <label>*Drive name: </label>
         <input
           type="text"
-          name="name"
-          value={formData.name}
+          name="driveName"
+          value={formData.driveName}
           onChange={handleChange}
           required
         />
@@ -106,11 +109,11 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
         />
       </div>
       <div>
-        <label>*Eligible grades: </label>
+        <label>*Applicable grades: </label>
         <input
           type="text"
-          name="eligibleGrades"
-          value={formData.eligibleGrades}
+          name="applicableGrades"
+          value={formData.applicableGrades}
           onChange={handleChange}
           required
         />

@@ -25,6 +25,12 @@ const StudentCard = ({ student }) => {
         <span>Gender: </span>
         <span>{student.gender}</span>
       </div>
+      {student.vaccineTaken && (
+        <div>
+          <span>Vaccination taken: </span>
+          <span>{student.vaccineTaken.join(", ")}</span>
+        </div>
+      )}
       <button onClick={handleEditClick}>Edit</button>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import useAppStore from "../../store/useAppStore";
@@ -10,14 +10,51 @@ const VaccinationDrives = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
-  const vaccinationDrives = useAppStore((state) => state.vaccinationDrives);
+  const allVaccinationDrives = useAppStore((state) => state.vaccinationDrives);
   const setVaccinationDrives = useAppStore(
     (state) => state.setVaccinationDrives
   );
 
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    driveName: "",
+    vaccineName: "",
+    driveDate: "",
+    applicableGrade: "",
+  });
+
+  const filteredVaccinationDrives = useMemo(() => {
+    return allVaccinationDrives.filter((vaccinationDrive) => {
+      const containDriveName = filters.driveName
+        ? vaccinationDrive.driveName
+            .toLowerCase()
+            .includes(filters.driveName.toLowerCase())
+        : true;
+
+      const containVaccineName = filters.vaccineName
+        ? vaccinationDrive.vaccineName
+            .toLowerCase()
+            .includes(filters.vaccineName.toLowerCase())
+        : true;
+      const matchdriveDate = filters.driveDate
+        ? vaccinationDrive.driveDate === filters.driveDate
+        : true;
+      const matchApplicableGrade = filters.applicableGrade
+        ? vaccinationDrive.applicableGrades.includes(filters.applicableGrade)
+        : true;
+
+      return (
+        containDriveName &&
+        containVaccineName &&
+        matchdriveDate &&
+        matchApplicableGrade
+      );
+    });
+  }, [allVaccinationDrives, filters]);
+
   useEffect(() => {
     (async () => {
-      if (vaccinationDrives.length !== 0) {
+      if (allVaccinationDrives.length !== 0) {
         setLoading(false);
         return;
       }
@@ -37,23 +74,74 @@ const VaccinationDrives = () => {
     navigate("./add"); // Navigate to /add route
   };
 
+  const handleFilterChange = (e) => {
+    let { type, name, value } = e.target;
+    if (type === "number" && value !== "") {
+      value = parseInt(value, 10);
+    }
+
+    setFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const filterPanel = () => {
+    return (
+      <div>
+        <input
+          type="text"
+          name="vaccineName"
+          value={filters.vaccineName}
+          placeholder="Vaccine name"
+          onChange={handleFilterChange}
+        />
+        <input
+          type="date"
+          name="driveDate"
+          value={filters.driveDate}
+          placeholder="Drive date"
+          onChange={handleFilterChange}
+        />
+        <input
+          type="text"
+          name="applicableGrade"
+          value={filters.applicableGrade}
+          placeholder="Applicable grade"
+          onChange={handleFilterChange}
+        />
+      </div>
+    );
+  };
+
   return (
     <div>
       <div>Vaccination Drives</div>
+
       <div>
         <div>
-          <div>Search by vaccination drive name: </div>
-          <input type="text" />
+          <label>Search by vaccination drive name: </label>
+          <input
+            type="text"
+            name="driveName"
+            value={filters.driveName}
+            placeholder="Vaccination drive name"
+            onChange={handleFilterChange}
+          />
         </div>
         <div>
-          <button>Filters</button>
+          <button onClick={() => setShowFilters((prev) => !prev)}>
+            {showFilters ? "Hide Filters" : "Show Filters"}
+          </button>
+          {showFilters && filterPanel()}
         </div>
         <button onClick={handleAddClick}>Add vaccination drive</button>
       </div>
+
       {loading ? (
         <div>Loading...</div>
-      ) : vaccinationDrives.length ? (
-        vaccinationDrives.map((vaccinationDrive, i) => (
+      ) : filteredVaccinationDrives.length ? (
+        filteredVaccinationDrives.map((vaccinationDrive, i) => (
           <VaccinationDriveCard key={i} vaccinationDrive={vaccinationDrive} />
         ))
       ) : (

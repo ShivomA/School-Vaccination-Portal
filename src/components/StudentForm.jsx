@@ -31,7 +31,11 @@ const StudentForm = ({ student, onSubmit }) => {
   }, [student]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { type, name, value } = e.target;
+    if (type === "number" && value !== "") {
+      value = parseInt(value, 10);
+    }
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
@@ -80,7 +84,7 @@ const StudentForm = ({ student, onSubmit }) => {
       <div>
         <label>*Grade: </label>
         <input
-          type="number"
+          type="text"
           name="grade"
           value={formData.grade}
           onChange={handleChange}
@@ -89,13 +93,17 @@ const StudentForm = ({ student, onSubmit }) => {
       </div>
       <div>
         <label>*Gender: </label>
-        <input
-          type="text"
+
+        <select
           name="gender"
           value={formData.gender}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
       </div>
       <div>
         <label>Guardian Name: </label>

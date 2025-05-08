@@ -8,8 +8,22 @@ function generateRandomId(maxLength = 8) {
 
 export const fetchStudentsFromDB = async () => {
   const dummyStudents = [
-    { id: "1", name: "One", age: 1, grade: 1, gender: "M" },
-    { id: "2", name: "Two", age: 2, grade: 2, gender: "F" },
+    {
+      id: "1",
+      name: "One",
+      age: 1,
+      grade: "1",
+      gender: "Male",
+      vaccineTaken: ["a", "b"],
+    },
+    {
+      id: "2",
+      name: "Two",
+      age: 2,
+      grade: "2",
+      gender: "Female",
+      vaccineTaken: ["b", "c"],
+    },
   ];
 
   await new Promise((res) => setTimeout(res, 1000));
