@@ -10,7 +10,6 @@ const Navbar = () => {
       <a href="/dashboard">Dashboard</a>
       <a href="/students">Students</a>
       <a href="/vaccination-drives">Vaccination Drives</a>
-      <a href="/reports">Reports</a>
       {isAuthenticated && <button onClick={logout}>Logout</button>}
     </div>
   );

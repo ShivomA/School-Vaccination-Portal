@@ -4,11 +4,19 @@ import { useNavigate } from "react-router-dom";
 import useAppStore from "../../store/useAppStore";
 import VaccinationDriveCard from "../../components/VaccinationDriveCard";
 
-import { fetchVaccinationDrivesFromDB } from "../../api/vaccinationDrives";
+import {
+  fetchVaccinationDrivesFromDB,
+  fetchVaccinationDrivesReport,
+} from "../../api/vaccinationDrives";
+import {
+  downloadVaccinationDrivesReportCSV,
+  downloadVaccinationDrivesReportExcel,
+} from "../../utils/exportUtils";
 
 const VaccinationDrives = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [reportType, setReportType] = useState("excel");
 
   const allVaccinationDrives = useAppStore((state) => state.vaccinationDrives);
   const setVaccinationDrives = useAppStore(
@@ -70,6 +78,16 @@ const VaccinationDrives = () => {
     })();
   });
 
+  const handleGenerateReport = async () => {
+    const reportData = await fetchVaccinationDrivesReport(filters);
+
+    if (reportType === "excel") {
+      downloadVaccinationDrivesReportExcel(reportData);
+    } else if (reportType === "csv") {
+      downloadVaccinationDrivesReportCSV(reportData);
+    }
+  };
+
   const handleAddClick = () => {
     navigate("./add"); // Navigate to /add route
   };
@@ -117,6 +135,20 @@ const VaccinationDrives = () => {
   return (
     <div>
       <div>Vaccination Drives</div>
+
+      <div>
+        <button onClick={handleGenerateReport}>
+          Generate & Download Report
+        </button>
+
+        <select
+          onChange={(e) => setReportType(e.target.value)}
+          value={reportType}
+        >
+          <option value="excel">Excel</option>
+          <option value="csv">CSV</option>
+        </select>
+      </div>
 
       <div>
         <div>

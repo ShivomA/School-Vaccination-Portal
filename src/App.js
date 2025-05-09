@@ -15,8 +15,6 @@ import VaccinationDrives from "./pages/vaccinationDrives/VaccinationDrives";
 import AddVaccinationDrive from "./pages/vaccinationDrives/AddVaccinationDrive";
 import EditVaccinationDrive from "./pages/vaccinationDrives/EditVaccinationDrive";
 
-import Reports from "./pages/Reports";
-
 import NotFound from "./pages/NotFound";
 
 const PrivateRoute = ({ children }) => {
@@ -91,15 +89,6 @@ function App() {
           element={
             <PrivateRoute>
               <EditVaccinationDrive />
-            </PrivateRoute>
-          }
-        />
-
-        <Route
-          path="/reports"
-          element={
-            <PrivateRoute>
-              <Reports />
             </PrivateRoute>
           }
         />

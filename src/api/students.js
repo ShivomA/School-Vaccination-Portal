@@ -135,3 +135,67 @@ export const updateStudentToDB = async (id, student) => {
     throw error;
   }
 };
+
+export const fetchStudentsReport = async (filters = {}) => {
+  const dummyStudentsReport = [
+    {
+      id: "1",
+      name: "One",
+      age: 1,
+      grade: "1",
+      gender: "Male",
+      vaccineTaken: [
+        { name: "a", dateOfVaccination: "2025-06-12" },
+        { name: "b", dateOfVaccination: "2025-06-18" },
+      ],
+    },
+    {
+      id: "2",
+      name: "Two",
+      age: 2,
+      grade: "2",
+      gender: "Female",
+      vaccineTaken: [
+        { name: "b", dateOfVaccination: "2025-07-12" },
+        { name: "c", dateOfVaccination: "2025-07-18" },
+      ],
+    },
+  ];
+
+  const filteredDummyStudentsReport = dummyStudentsReport.filter((student) => {
+    const containName = filters.name
+      ? student.name.toLowerCase().includes(filters.name.toLowerCase())
+      : true;
+
+    const matchAge = filters.age ? student.age === filters.age : true;
+    const matchGrade = filters.grade ? student.grade === filters.grade : true;
+    const matchGender = filters.gender
+      ? student.gender === filters.gender
+      : true;
+    const matchVaccine = filters.vaccineTaken
+      ? student.vaccineTaken.map((v) => v.name).includes(filters.vaccineTaken)
+      : true;
+
+    return containName && matchAge && matchGrade && matchGender && matchVaccine;
+  });
+
+  await new Promise((res) => setTimeout(res, 1000));
+
+  // Return dummy response
+  return filteredDummyStudentsReport;
+
+  try {
+    const queryParams = new URLSearchParams(filters).toString();
+    const response = await fetch(`/api/reports/students?${queryParams}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch students report");
+    }
+
+    const studentsReport = await response.json();
+    return studentsReport;
+  } catch (error) {
+    console.error("Error fetching vaccination drive report:", error);
+    throw error;
+  }
+};

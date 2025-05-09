@@ -4,11 +4,16 @@ import { useNavigate } from "react-router-dom";
 import useAppStore from "../../store/useAppStore";
 import StudentCard from "../../components/StudentCard";
 
-import { fetchStudentsFromDB } from "../../api/students";
+import {
+  downloadStudentsReportCSV,
+  downloadStudentsReportExcel,
+} from "../../utils/exportUtils";
+import { fetchStudentsFromDB, fetchStudentsReport } from "../../api/students";
 
 const Students = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [reportType, setReportType] = useState("excel");
 
   const allStudents = useAppStore((state) => state.students);
   const setStudents = useAppStore((state) => state.setStudents);
@@ -60,6 +65,16 @@ const Students = () => {
       }
     })();
   });
+
+  const handleGenerateReport = async () => {
+    const reportData = await fetchStudentsReport(filters);
+
+    if (reportType === "excel") {
+      downloadStudentsReportExcel(reportData);
+    } else if (reportType === "csv") {
+      downloadStudentsReportCSV(reportData);
+    }
+  };
 
   const handleAddClick = () => {
     navigate("./add"); // Navigate to /add route
@@ -118,6 +133,19 @@ const Students = () => {
     <div>
       <div>Students</div>
 
+      <div>
+        <button onClick={handleGenerateReport}>
+          Generate & Download Report
+        </button>
+
+        <select
+          onChange={(e) => setReportType(e.target.value)}
+          value={reportType}
+        >
+          <option value="excel">Excel</option>
+          <option value="csv">CSV</option>
+        </select>
+      </div>
       <div>
         <div>
           <label>Search by name: </label>

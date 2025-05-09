@@ -71,7 +71,7 @@ export const addVaccinationDriveToDB = async (vaccinationDrive) => {
   return { ...vaccinationDrive, id: generateRandomId(), lastUpdated: "today" };
 
   try {
-    const response = await fetch("/api/vaccination-drive", {
+    const response = await fetch("/api/vaccination-drives", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export const updateVaccinationDriveToDB = async (id, vaccinationDrive) => {
   return { ...vaccinationDrive, id: id, lastUpdated: "today" };
 
   try {
-    const response = await fetch(`/api/vaccination-drive/${id}`, {
+    const response = await fetch(`/api/vaccination-drives/${id}`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -130,6 +130,111 @@ export const updateVaccinationDriveToDB = async (id, vaccinationDrive) => {
     return updatedVaccinationDrive;
   } catch (error) {
     console.error("Error updating vaccination drive:", error);
+    throw error;
+  }
+};
+
+export const fetchVaccinationDrivesReport = async (filters = {}) => {
+  const dummyVaccinationDrivesReport = [
+    {
+      id: "1",
+      driveName: "Drive one",
+      vaccineName: "Vaccine one",
+      driveDate: "2025-06-12",
+      location: "Ground",
+      applicableGrades: ["1", "2", "3"],
+      availableDoses: 100,
+      vaccinatedStudents: [
+        {
+          id: "1",
+          name: "One",
+          age: 1,
+          grade: "1",
+          gender: "Male",
+        },
+        {
+          id: "2",
+          name: "Two",
+          age: 2,
+          grade: "2",
+          gender: "Female",
+        },
+      ],
+    },
+    {
+      id: "2",
+      driveName: "Drive two",
+      vaccineName: "Vaccine two",
+      driveDate: "2025-06-24",
+      location: "Common area",
+      applicableGrades: ["3", "4", "5"],
+      availableDoses: 80,
+      vaccinatedStudents: [
+        {
+          id: "11",
+          name: "One-One",
+          age: 11,
+          grade: "11",
+          gender: "Male",
+        },
+        {
+          id: "22",
+          name: "Two-Two",
+          age: 22,
+          grade: "22",
+          gender: "Female",
+        },
+      ],
+    },
+  ];
+
+  const filteredDummyVaccinationDrivesReport =
+    dummyVaccinationDrivesReport.filter((vaccinationDrive) => {
+      const containDriveName = filters.driveName
+        ? vaccinationDrive.driveName
+            .toLowerCase()
+            .includes(filters.driveName.toLowerCase())
+        : true;
+
+      const containVaccineName = filters.vaccineName
+        ? vaccinationDrive.vaccineName
+            .toLowerCase()
+            .includes(filters.vaccineName.toLowerCase())
+        : true;
+      const matchdriveDate = filters.driveDate
+        ? vaccinationDrive.driveDate === filters.driveDate
+        : true;
+      const matchApplicableGrade = filters.applicableGrade
+        ? vaccinationDrive.applicableGrades.includes(filters.applicableGrade)
+        : true;
+
+      return (
+        containDriveName &&
+        containVaccineName &&
+        matchdriveDate &&
+        matchApplicableGrade
+      );
+    });
+
+  await new Promise((res) => setTimeout(res, 1000));
+
+  // Return dummy response
+  return filteredDummyVaccinationDrivesReport;
+
+  try {
+    const queryParams = new URLSearchParams(filters).toString();
+    const response = await fetch(
+      `/api/reports/vaccination-drives?${queryParams}`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch vaccination drives report");
+    }
+
+    const vaccinationDrivesReport = await response.json();
+    return vaccinationDrivesReport;
+  } catch (error) {
+    console.error("Error fetching vaccination drives report:", error);
     throw error;
   }
 };
