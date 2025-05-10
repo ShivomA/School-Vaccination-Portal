@@ -1,5 +1,12 @@
 import * as XLSX from "xlsx";
 
+const getFormattedDate = (date) => {
+  const options = { year: "numeric", month: "short", day: "numeric" };
+  const formattedDate = new Date(date).toLocaleDateString("en-GB", options);
+
+  return formattedDate;
+};
+
 export const downloadStudentsReportExcel = (reportData) => {
   if (reportData.length === 0) {
     alert("No student found for the selected filters.");
@@ -31,7 +38,10 @@ export const downloadStudentsReportExcel = (reportData) => {
           formattedRow[label] = "No vaccines taken";
         else {
           formattedRow[label] = vaccineTaken
-            .map((v) => `${v.name} (${v.dateOfVaccination})`)
+            .map(
+              (v) =>
+                `${v.vaccineName} (${getFormattedDate(v.dateOfVaccination)})`
+            )
             .join(", ");
         }
       } else {
@@ -80,9 +90,13 @@ export const downloadVaccinationDrivesReportExcel = (reportData) => {
           const label = headerLabels[key] || key;
 
           if (key === "vaccinatedStudents") {
-            formattedRow[
-              label
-            ] = `${student.name} (${student.gender}, Age: ${student.age} years, Grade: ${student.grade}, ${row.driveDate})`;
+            formattedRow[label] = `${student.name} (${student.gender}, Age: ${
+              student.age
+            } years, Grade: ${student.grade}, ${getFormattedDate(
+              row.driveDate
+            )})`;
+          } else if (key === "driveDate") {
+            formattedRow[label] = getFormattedDate(row[key]);
           } else if (key === "applicableGrades") {
             formattedRow[label] = row[key].join(", ");
           } else {
@@ -100,6 +114,10 @@ export const downloadVaccinationDrivesReportExcel = (reportData) => {
 
         if (key === "vaccinatedStudents") {
           formattedRow[label] = "No students were vaccinated in this drive";
+        } else if (key === "driveDate") {
+          formattedRow[label] = getFormattedDate(row[key]);
+        } else if (key === "applicableGrades") {
+          formattedRow[label] = row[key].join(", ");
         } else {
           formattedRow[label] = row[key];
         }
@@ -144,7 +162,10 @@ export const downloadStudentsReportCSV = (reportData) => {
           if (vaccineTaken.length === 0) return '"No vaccines taken"';
 
           return `"${vaccineTaken
-            .map((vaccine) => `${vaccine.name} (${vaccine.dateOfVaccination})`)
+            .map(
+              (v) =>
+                `${v.vaccineName} (${getFormattedDate(v.dateOfVaccination)})`
+            )
             .join(", ")}"`;
         }
 
@@ -194,7 +215,14 @@ export const downloadVaccinationDrivesReportCSV = (reportData) => {
       vaccinatedStudents.forEach((student) => {
         const rowData = headers.map((key) => {
           if (key === "vaccinatedStudents") {
-            return `"${student.name} (${student.gender}, Age: ${student.age} years, Grade: ${student.grade}, ${row.driveDate})"`;
+            return `"${student.name} (${student.gender}, Age: ${
+              student.age
+            } years, Grade: ${student.grade}, ${getFormattedDate(
+              row.driveDate
+            )})"`;
+          } else if (key === "driveDate") {
+            const value = row[key];
+            return `"${getFormattedDate(value)}"`;
           } else {
             const value = row[key];
             return `"${value}"`;
@@ -204,11 +232,17 @@ export const downloadVaccinationDrivesReportCSV = (reportData) => {
         rows.push(rowData.join(","));
       });
     } else {
-      const rowData = headers.map((key) =>
-        key === "vaccinatedStudents"
-          ? '"No students were vaccinated in this drive"'
-          : `"${row[key]}"`
-      );
+      const rowData = headers.map((key) => {
+        if (key === "vaccinatedStudents") {
+          return `"No students were vaccinated in this drive"`;
+        } else if (key === "driveDate") {
+          const value = row[key];
+          return `"${getFormattedDate(value)}"`;
+        } else {
+          const value = row[key];
+          return `"${value}"`;
+        }
+      });
 
       rows.push(rowData.join(","));
     }

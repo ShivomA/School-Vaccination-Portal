@@ -1,40 +1,10 @@
-import VACCINATION_DRIVE_REQUIRED_FIELDS from "../templates/vaccineDriveTemplate";
+import VACCINATION_DRIVE_REQUIRED_FIELDS from "../templates/vaccinationDriveTemplate";
 
-function generateRandomId(maxLength = 8) {
-  return Math.random()
-    .toString(36)
-    .substring(2, 2 + maxLength);
-}
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const fetchVaccinationDrivesFromDB = async () => {
-  const dummyVaccinationDrives = [
-    {
-      id: "1",
-      driveName: "Drive one",
-      vaccineName: "Vaccine one",
-      driveDate: "2025-06-12",
-      location: "Ground",
-      applicableGrades: ["1", "2", "3"],
-      availableDoses: 100,
-    },
-    {
-      id: "2",
-      driveName: "Drive two",
-      vaccineName: "Vaccine two",
-      driveDate: "2025-06-24",
-      location: "Common area",
-      applicableGrades: ["3", "4", "5"],
-      availableDoses: 80,
-    },
-  ];
-
-  await new Promise((res) => setTimeout(res, 1000));
-
-  // Return dummy response
-  return dummyVaccinationDrives;
-
   try {
-    const response = fetch("api/vaccination-drives", {
+    const response = await fetch(`${BASE_URL}/api/vaccination-drives`, {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -42,10 +12,18 @@ export const fetchVaccinationDrivesFromDB = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to get vaccination drives data");
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
     }
 
-    const vaccinationDrives = await response.json();
+    let vaccinationDrives = await response.json();
+
+    // Convert _id to id
+    vaccinationDrives = vaccinationDrives.map((drive) => ({
+      ...drive,
+      id: drive._id,
+    }));
+
     return vaccinationDrives;
   } catch (error) {
     console.error("Error getting vaccination drives data:", error);
@@ -65,13 +43,8 @@ export const addVaccinationDriveToDB = async (vaccinationDrive) => {
     throw new Error(`Missing fields: ${missingFields.join(", ")}`);
   }
 
-  await new Promise((res) => setTimeout(res, 1000));
-
-  // Return dummy response
-  return { ...vaccinationDrive, id: generateRandomId(), lastUpdated: "today" };
-
   try {
-    const response = await fetch("/api/vaccination-drives", {
+    const response = await fetch(`${BASE_URL}/api/vaccination-drives`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -80,10 +53,13 @@ export const addVaccinationDriveToDB = async (vaccinationDrive) => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to add vaccination drive");
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
     }
 
     const newVaccinationDrive = await response.json();
+    newVaccinationDrive.id = newVaccinationDrive._id; // Convert _id to id
+
     return newVaccinationDrive;
   } catch (error) {
     console.error("Error adding vaccination derive:", error);
@@ -108,14 +84,9 @@ export const updateVaccinationDriveToDB = async (id, vaccinationDrive) => {
     throw new Error(`Missing fields: ${missingFields.join(", ")}`);
   }
 
-  await new Promise((res) => setTimeout(res, 1000));
-
-  // Return dummy response
-  return { ...vaccinationDrive, id: id, lastUpdated: "today" };
-
   try {
-    const response = await fetch(`/api/vaccination-drives/${id}`, {
-      method: "post",
+    const response = await fetch(`${BASE_URL}/api/vaccination-drives/${id}`, {
+      method: "put",
       headers: {
         "Content-Type": "application/json",
       },
@@ -123,10 +94,13 @@ export const updateVaccinationDriveToDB = async (id, vaccinationDrive) => {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to update vaccination drive");
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
     }
 
     const updatedVaccinationDrive = await response.json();
+    updatedVaccinationDrive.id = updatedVaccinationDrive._id; // Convert _id to id
+
     return updatedVaccinationDrive;
   } catch (error) {
     console.error("Error updating vaccination drive:", error);
@@ -135,100 +109,21 @@ export const updateVaccinationDriveToDB = async (id, vaccinationDrive) => {
 };
 
 export const fetchVaccinationDrivesReport = async (filters = {}) => {
-  const dummyVaccinationDrivesReport = [
-    {
-      id: "1",
-      driveName: "Drive one",
-      vaccineName: "Vaccine one",
-      driveDate: "2025-06-12",
-      location: "Ground",
-      applicableGrades: ["1", "2", "3"],
-      availableDoses: 100,
-      vaccinatedStudents: [
-        {
-          id: "1",
-          name: "One",
-          age: 1,
-          grade: "1",
-          gender: "Male",
-        },
-        {
-          id: "2",
-          name: "Two",
-          age: 2,
-          grade: "2",
-          gender: "Female",
-        },
-      ],
-    },
-    {
-      id: "2",
-      driveName: "Drive two",
-      vaccineName: "Vaccine two",
-      driveDate: "2025-06-24",
-      location: "Common area",
-      applicableGrades: ["3", "4", "5"],
-      availableDoses: 80,
-      vaccinatedStudents: [
-        {
-          id: "11",
-          name: "One-One",
-          age: 11,
-          grade: "11",
-          gender: "Male",
-        },
-        {
-          id: "22",
-          name: "Two-Two",
-          age: 22,
-          grade: "22",
-          gender: "Female",
-        },
-      ],
-    },
-  ];
-
-  const filteredDummyVaccinationDrivesReport =
-    dummyVaccinationDrivesReport.filter((vaccinationDrive) => {
-      const containDriveName = filters.driveName
-        ? vaccinationDrive.driveName
-            .toLowerCase()
-            .includes(filters.driveName.toLowerCase())
-        : true;
-
-      const containVaccineName = filters.vaccineName
-        ? vaccinationDrive.vaccineName
-            .toLowerCase()
-            .includes(filters.vaccineName.toLowerCase())
-        : true;
-      const matchdriveDate = filters.driveDate
-        ? vaccinationDrive.driveDate === filters.driveDate
-        : true;
-      const matchApplicableGrade = filters.applicableGrade
-        ? vaccinationDrive.applicableGrades.includes(filters.applicableGrade)
-        : true;
-
-      return (
-        containDriveName &&
-        containVaccineName &&
-        matchdriveDate &&
-        matchApplicableGrade
-      );
-    });
-
-  await new Promise((res) => setTimeout(res, 1000));
-
-  // Return dummy response
-  return filteredDummyVaccinationDrivesReport;
-
   try {
     const queryParams = new URLSearchParams(filters).toString();
     const response = await fetch(
-      `/api/reports/vaccination-drives?${queryParams}`
+      `${BASE_URL}/api/reports/vaccination-drives?${queryParams}`,
+      {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch vaccination drives report");
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
     }
 
     const vaccinationDrivesReport = await response.json();

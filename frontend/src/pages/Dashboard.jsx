@@ -54,11 +54,11 @@ const Dashboard = () => {
         <div>Loading...</div>
       ) : (
         <>
-          {dashboardData?.totalStudents && (
+          {dashboardData?.totalStudents !== undefined && (
             <div>Total registered students: {dashboardData?.totalStudents}</div>
           )}
 
-          {dashboardData?.percentageStudentsVaccinated && (
+          {dashboardData?.percentageStudentsVaccinated !== undefined && (
             <div>
               Percentage students vaccinated:{" "}
               {dashboardData?.percentageStudentsVaccinated}%

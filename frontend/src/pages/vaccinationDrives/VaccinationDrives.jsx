@@ -29,6 +29,7 @@ const VaccinationDrives = () => {
     vaccineName: "",
     driveDate: "",
     applicableGrade: "",
+    showPastDrives: false,
   });
 
   const filteredVaccinationDrives = useMemo(() => {
@@ -44,18 +45,25 @@ const VaccinationDrives = () => {
             .toLowerCase()
             .includes(filters.vaccineName.toLowerCase())
         : true;
+
       const matchdriveDate = filters.driveDate
-        ? vaccinationDrive.driveDate === filters.driveDate
+        ? vaccinationDrive.driveDate.split("T")[0] === filters.driveDate
         : true;
+
       const matchApplicableGrade = filters.applicableGrade
         ? vaccinationDrive.applicableGrades.includes(filters.applicableGrade)
         : true;
+
+      const matchPastDrives = filters.showPastDrives
+        ? true
+        : new Date(vaccinationDrive.driveDate) >= new Date();
 
       return (
         containDriveName &&
         containVaccineName &&
         matchdriveDate &&
-        matchApplicableGrade
+        matchApplicableGrade &&
+        matchPastDrives
       );
     });
   }, [allVaccinationDrives, filters]);
@@ -128,6 +136,23 @@ const VaccinationDrives = () => {
           placeholder="Applicable grade"
           onChange={handleFilterChange}
         />
+        <label>
+          <input
+            type="checkbox"
+            name="showPastDrives"
+            checked={filters.showPastDrives}
+            placeholder="Show Past Drives"
+            onChange={(e) => {
+              const checked = e.target.checked;
+
+              setFilters((prevState) => ({
+                ...prevState,
+                showPastDrives: checked,
+              }));
+            }}
+          />
+          Show past drives
+        </label>
       </div>
     );
   };
@@ -174,7 +199,11 @@ const VaccinationDrives = () => {
         <div>Loading...</div>
       ) : filteredVaccinationDrives.length ? (
         filteredVaccinationDrives.map((vaccinationDrive, i) => (
-          <VaccinationDriveCard key={i} vaccinationDrive={vaccinationDrive} />
+          <VaccinationDriveCard
+            key={i}
+            vaccinationDrive={vaccinationDrive}
+            showEditOption={true}
+          />
         ))
       ) : (
         <div>No vaccination drive found</div>

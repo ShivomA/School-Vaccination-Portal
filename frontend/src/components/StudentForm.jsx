@@ -8,9 +8,6 @@ const StudentForm = ({ student, onSubmit }) => {
     age: student?.age || "",
     grade: student?.grade || "",
     gender: student?.gender || "",
-    guardianName: student?.guardianName || "",
-    contactNumber: student?.contactNumber || "",
-    address: student?.address || "",
   });
 
   useEffect(() => {
@@ -21,9 +18,6 @@ const StudentForm = ({ student, onSubmit }) => {
         age: student.age,
         grade: student.grade,
         gender: student.gender,
-        guardianName: student.guardianName || "",
-        contactNumber: student.contactNumber || "",
-        address: student.address || "",
       });
     }
   }, [student]);
@@ -92,33 +86,6 @@ const StudentForm = ({ student, onSubmit }) => {
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
-      </div>
-      <div>
-        <label>Guardian Name: </label>
-        <input
-          type="text"
-          name="guardianName"
-          value={formData.guardianName}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Contact Number: </label>
-        <input
-          type="text"
-          name="contactNumber"
-          value={formData.contactNumber}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Address: </label>
-        <input
-          type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-        />
       </div>
       <button type="submit">{student ? "Update" : "Add"} Student</button>
     </form>

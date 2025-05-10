@@ -39,7 +39,9 @@ const Students = () => {
         ? student.gender === filters.gender
         : true;
       const matchVaccine = filters.vaccineTaken
-        ? student.vaccineTaken.map((v) => v.name).includes(filters.vaccineTaken)
+        ? student.vaccineTaken
+            .map((v) => v.vaccineName)
+            .includes(filters.vaccineTaken)
         : true;
 
       return (
@@ -50,7 +52,7 @@ const Students = () => {
 
   useEffect(() => {
     (async () => {
-      if (allStudents.length !== 0) {
+      if (allStudents.length !== 0 || !loading) {
         setLoading(false);
         return;
       }

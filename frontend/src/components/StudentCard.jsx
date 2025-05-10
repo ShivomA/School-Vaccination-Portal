@@ -7,6 +7,13 @@ const StudentCard = ({ student }) => {
     navigate(`./edit/${student.id}`); // Navigate to /edit/:id route
   };
 
+  const getFormattedDate = (date) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const formattedDate = new Date(date).toLocaleDateString("en-GB", options);
+
+    return formattedDate;
+  };
+
   return (
     <div>
       <div>
@@ -29,9 +36,16 @@ const StudentCard = ({ student }) => {
         <div>
           <span>Vaccination taken: </span>
           <span>
-            {student.vaccineTaken
-              .map((v) => `${v.name} (${v.dateOfVaccination})`)
-              .join(", ")}
+            {student.vaccineTaken.length === 0
+              ? "None"
+              : student.vaccineTaken
+                  .map(
+                    (v) =>
+                      `${v.vaccineName} (${getFormattedDate(
+                        v.dateOfVaccination
+                      )})`
+                  )
+                  .join(", ")}
           </span>
         </div>
       )}

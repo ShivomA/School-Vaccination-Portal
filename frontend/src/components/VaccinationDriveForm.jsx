@@ -5,9 +5,8 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
   const [formData, setFormData] = useState({
     id: vaccinationDrive?.id || "",
     driveName: vaccinationDrive?.driveName || "",
-    description: vaccinationDrive?.description || "",
     vaccineName: vaccinationDrive?.vaccineName || "",
-    driveDate: vaccinationDrive?.driveDate || "",
+    driveDate: vaccinationDrive?.driveDate.split("T")[0] || "",
     location: vaccinationDrive?.location || "",
     applicableGrades: vaccinationDrive?.applicableGrades?.join(", ") || "",
     availableDoses: vaccinationDrive?.availableDoses || "",
@@ -18,9 +17,8 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
       setFormData({
         id: vaccinationDrive.id,
         driveName: vaccinationDrive.driveName,
-        description: vaccinationDrive.description || "",
         vaccineName: vaccinationDrive.vaccineName,
-        driveDate: vaccinationDrive.driveDate || "",
+        driveDate: vaccinationDrive.driveDate.split("T")[0],
         location: vaccinationDrive.location,
         applicableGrades: vaccinationDrive.applicableGrades.join(", "),
         availableDoses: vaccinationDrive.availableDoses,
@@ -67,15 +65,6 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
           value={formData.driveName}
           onChange={handleChange}
           required
-        />
-      </div>
-      <div>
-        <label>Description: </label>
-        <input
-          type="text"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
         />
       </div>
       <div>

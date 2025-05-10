@@ -1,10 +1,17 @@
 import { useNavigate } from "react-router-dom";
 
-const VaccinationDriveCard = ({ vaccinationDrive }) => {
+const VaccinationDriveCard = ({ vaccinationDrive, showEditOption = false }) => {
   const navigate = useNavigate();
 
   const handleEditClick = () => {
     navigate(`./edit/${vaccinationDrive.id}`); // Navigate to /edit/:id route
+  };
+
+  const getFormattedDate = (date) => {
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const formattedDate = new Date(date).toLocaleDateString("en-GB", options);
+
+    return formattedDate;
   };
 
   return (
@@ -19,7 +26,7 @@ const VaccinationDriveCard = ({ vaccinationDrive }) => {
       </div>
       <div>
         <span>Date: </span>
-        <span>{vaccinationDrive.driveDate}</span>
+        <span>{getFormattedDate(vaccinationDrive.driveDate)}</span>
       </div>
       <div>
         <span>Location: </span>
@@ -33,7 +40,7 @@ const VaccinationDriveCard = ({ vaccinationDrive }) => {
         <span>Available doses: </span>
         <span>{vaccinationDrive.availableDoses}</span>
       </div>
-      <button onClick={handleEditClick}>Edit</button>
+      {showEditOption && <button onClick={handleEditClick}>Edit</button>}
     </div>
   );
 };
