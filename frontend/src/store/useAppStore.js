@@ -40,6 +40,27 @@ const useAppStore = create((set) => ({
     }));
     return "Vaccination drive updated successfully";
   },
+
+  // Selected vaccination drive state
+  selectedVaccinationDrive: null,
+  setSelectedVaccinationDrive: (selectedVaccinationDrive) =>
+    set({ selectedVaccinationDrive }),
+
+  // Applicable students for drive state
+  applicableStudents: [],
+  setApplicableStudents: (applicableStudents) => set({ applicableStudents }),
+  updateApplicableStudentInStore: (id, student) => {
+    set((state) => ({
+      applicableStudents: state.applicableStudents.map((s) =>
+        s.id === id ? student : s
+      ),
+      selectedVaccinationDrive: {
+        ...state.selectedVaccinationDrive,
+        availableDoses: state.selectedVaccinationDrive.availableDoses - 1,
+      },
+    }));
+    return "Student updated successfully";
+  },
 }));
 
 export default useAppStore;

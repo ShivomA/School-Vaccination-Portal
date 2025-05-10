@@ -1,3 +1,4 @@
+const Student = require("../models/Student");
 const VaccinationDrive = require("../models/VaccinationDrive");
 
 // GET /api/vaccination-drives
@@ -7,6 +8,17 @@ exports.getDrives = async (req, res) => {
     res.json(drives);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch vaccination drives" });
+  }
+};
+
+// GET /api/vaccination-drives/:id
+exports.getDriveById = async (req, res) => {
+  try {
+    const drive = await VaccinationDrive.findById(req.params.id);
+    if (!drive) return res.status(404).json({ error: "Drive not found" });
+    res.json(drive);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch vaccination drive" });
   }
 };
 
@@ -62,5 +74,26 @@ exports.updateDrive = async (req, res) => {
     res
       .status(400)
       .json({ error: "Failed to update drive", details: error.message });
+  }
+};
+
+// GET /api/vaccination-drives/:id/students
+exports.getStudents = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Get the vaccination drive
+    const drive = await VaccinationDrive.findById(id);
+    if (!drive) return res.status(404).json({ error: "Drive not found" });
+
+    // Get students whose grade is in drive.applicableGrades
+    const students = await Student.find({
+      grade: { $in: drive.applicableGrades },
+    });
+
+    res.json(students);
+  } catch (err) {
+    console.error("Error fetching applicable students:", err);
+    res.status(500).json({ error: "Failed to fetch applicable students" });
   }
 };

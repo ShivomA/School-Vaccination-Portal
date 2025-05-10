@@ -233,8 +233,12 @@ const Students = () => {
       {loading ? (
         <div>Loading...</div>
       ) : filteredStudents.length ? (
-        filteredStudents.map((student, i) => (
-          <StudentCard key={i} student={student} />
+        filteredStudents.map((student) => (
+          <StudentCard
+            key={student.id}
+            student={student}
+            showEditOption={true}
+          />
         ))
       ) : (
         <div>No student found</div>

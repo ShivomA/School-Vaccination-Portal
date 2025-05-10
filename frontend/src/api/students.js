@@ -146,6 +146,47 @@ export const updateStudentToDB = async (id, student) => {
   }
 };
 
+export const markStudentAsVaccinated = async (id, vaccinationDrive) => {
+  if (!id) {
+    // Throw error of id not provided
+    throw new Error("Student id not provided");
+  }
+  if (!vaccinationDrive?.id) {
+    // Throw error of id not provided
+    throw new Error("Vaccination drive id not provided");
+  }
+  if (!vaccinationDrive?.vaccineName) {
+    // Throw error of vaccine name not provided
+    throw new Error("Vaccine name not provided");
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/students/${id}/vaccinate`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        vaccineName: vaccinationDrive.vaccineName,
+        vaccinationDriveId: vaccinationDrive.id,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
+    }
+
+    const updatedStudent = await response.json();
+    updatedStudent.id = updatedStudent._id; // Convert _id to id
+
+    return updatedStudent;
+  } catch (error) {
+    console.error("Error vaccinating the student:", error);
+    throw error;
+  }
+};
+
 export const fetchStudentsReport = async (filters = {}) => {
   try {
     const queryParams = new URLSearchParams(filters).toString();

@@ -70,7 +70,7 @@ const VaccinationDrives = () => {
 
   useEffect(() => {
     (async () => {
-      if (allVaccinationDrives.length !== 0) {
+      if (allVaccinationDrives.length !== 0 || !loading) {
         setLoading(false);
         return;
       }
@@ -198,9 +198,9 @@ const VaccinationDrives = () => {
       {loading ? (
         <div>Loading...</div>
       ) : filteredVaccinationDrives.length ? (
-        filteredVaccinationDrives.map((vaccinationDrive, i) => (
+        filteredVaccinationDrives.map((vaccinationDrive) => (
           <VaccinationDriveCard
-            key={i}
+            key={vaccinationDrive.id}
             vaccinationDrive={vaccinationDrive}
             showEditOption={true}
           />

@@ -39,8 +39,7 @@ export const downloadStudentsReportExcel = (reportData) => {
         else {
           formattedRow[label] = vaccineTaken
             .map(
-              (v) =>
-                `${v.vaccineName} (${getFormattedDate(v.dateOfVaccination)})`
+              (v) => `${v.vaccineName} (${getFormattedDate(v.vaccinationDate)})`
             )
             .join(", ");
         }
@@ -163,8 +162,7 @@ export const downloadStudentsReportCSV = (reportData) => {
 
           return `"${vaccineTaken
             .map(
-              (v) =>
-                `${v.vaccineName} (${getFormattedDate(v.dateOfVaccination)})`
+              (v) => `${v.vaccineName} (${getFormattedDate(v.vaccinationDate)})`
             )
             .join(", ")}"`;
         }

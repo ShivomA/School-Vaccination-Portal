@@ -11,6 +11,7 @@ import Students from "./pages/students/Students";
 import AddStudent from "./pages/students/AddStudent";
 import EditStudent from "./pages/students/EditStudent";
 
+import VaccinationDrive from "./pages/vaccinationDrives/VaccinationDrive";
 import VaccinationDrives from "./pages/vaccinationDrives/VaccinationDrives";
 import AddVaccinationDrive from "./pages/vaccinationDrives/AddVaccinationDrive";
 import EditVaccinationDrive from "./pages/vaccinationDrives/EditVaccinationDrive";
@@ -68,6 +69,14 @@ function App() {
         />
 
         {/* Vaccination drives */}
+        <Route
+          path="/vaccination-drives/:id"
+          element={
+            <PrivateRoute>
+              <VaccinationDrive />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/vaccination-drives"
           element={

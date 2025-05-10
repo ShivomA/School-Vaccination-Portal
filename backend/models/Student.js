@@ -8,7 +8,7 @@ const studentSchema = new mongoose.Schema({
   vaccineTaken: [
     {
       vaccineName: String,
-      driveId: mongoose.Schema.Types.ObjectId,
+      vaccinationDriveId: mongoose.Schema.Types.ObjectId,
       vaccinationDate: Date,
     },
   ],

@@ -13,7 +13,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     (async () => {
-      if (Object.keys(dashboardData).length !== 0) {
+      if (Object.keys(dashboardData).length !== 0 || !loading) {
         setLoading(false);
         return;
       }

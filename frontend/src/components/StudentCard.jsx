@@ -1,17 +1,44 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const StudentCard = ({ student }) => {
-  const navigate = useNavigate();
+import useAppStore from "../store/useAppStore";
+import { markStudentAsVaccinated } from "../api/students";
 
-  const handleEditClick = () => {
-    navigate(`./edit/${student.id}`); // Navigate to /edit/:id route
-  };
+const StudentCard = ({
+  student,
+  drive = null,
+  showEditOption = false,
+  showVaccinationOption = false,
+}) => {
+  const navigate = useNavigate();
+  const [vaccinating, setVaccinating] = useState(false);
+
+  const updateApplicableStudentInStore = useAppStore(
+    (state) => state.updateApplicableStudentInStore
+  );
 
   const getFormattedDate = (date) => {
     const options = { year: "numeric", month: "short", day: "numeric" };
     const formattedDate = new Date(date).toLocaleDateString("en-GB", options);
 
     return formattedDate;
+  };
+
+  const handleEditClick = () => {
+    navigate(`./edit/${student.id}`); // Navigate to /edit/:id route
+  };
+
+  const handleMarkStudentAsVaccinated = async () => {
+    setVaccinating(true);
+
+    try {
+      const updatedStudent = await markStudentAsVaccinated(student.id, drive);
+      updateApplicableStudentInStore(student.id, updatedStudent);
+    } catch (error) {
+      alert("Error updating vaccination for student: " + error.message);
+    } finally {
+      setVaccinating(false);
+    }
   };
 
   return (
@@ -42,14 +69,28 @@ const StudentCard = ({ student }) => {
                   .map(
                     (v) =>
                       `${v.vaccineName} (${getFormattedDate(
-                        v.dateOfVaccination
+                        v.vaccinationDate
                       )})`
                   )
                   .join(", ")}
           </span>
         </div>
       )}
-      <button onClick={handleEditClick}>Edit</button>
+
+      {showEditOption && <button onClick={handleEditClick}>Edit</button>}
+
+      {showVaccinationOption &&
+        (vaccinating ? (
+          <div>Vaccinating</div>
+        ) : student.vaccineTaken.some(
+            (v) => v.vaccinationDriveId === drive.id
+          ) ? (
+          <div>Already vaccinated</div>
+        ) : (
+          <button onClick={handleMarkStudentAsVaccinated}>
+            Mark as Vaccinated
+          </button>
+        ))}
     </div>
   );
 };

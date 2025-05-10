@@ -31,6 +31,35 @@ export const fetchVaccinationDrivesFromDB = async () => {
   }
 };
 
+export const fetchVaccinationDriveById = async (id) => {
+  if (!id) {
+    // Throw error of id not provided
+    throw new Error("Id not provided");
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/vaccination-drives/${id}`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
+    }
+
+    const vaccinationDrive = await response.json();
+    vaccinationDrive.id = vaccinationDrive._id; // Convert _id to id
+
+    return vaccinationDrive;
+  } catch (error) {
+    console.error("Error getting vaccination drive data:", error);
+    throw error;
+  }
+};
+
 export const addVaccinationDriveToDB = async (vaccinationDrive) => {
   // Check if the vaccination drive has all the required fields
   const missingFields = VACCINATION_DRIVE_REQUIRED_FIELDS.filter(
@@ -130,6 +159,43 @@ export const fetchVaccinationDrivesReport = async (filters = {}) => {
     return vaccinationDrivesReport;
   } catch (error) {
     console.error("Error fetching vaccination drives report:", error);
+    throw error;
+  }
+};
+
+export const fetchStudentsForVaccinationDrives = async (id) => {
+  if (!id) {
+    // Throw error of id not provided
+    throw new Error("Id not provided");
+  }
+
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/vaccination-drives/${id}/students`,
+      {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
+    }
+
+    let applicableStudents = await response.json();
+
+    // Convert _id to id
+    applicableStudents = applicableStudents.map((student) => ({
+      ...student,
+      id: student._id,
+    }));
+
+    return applicableStudents;
+  } catch (error) {
+    console.error("Error getting applicable students data:", error);
     throw error;
   }
 };

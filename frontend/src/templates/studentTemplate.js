@@ -4,7 +4,7 @@ export const studentTemplate = {
   age: 0,
   grade: "",
   gender: "",
-  vaccineTaken: [], // Array of vaccine {vaccineName, dateOfVaccination}
+  vaccineTaken: [], // Array of vaccine {vaccineName, vaccinationDate}
   lastUpdated: "",
 };
 
