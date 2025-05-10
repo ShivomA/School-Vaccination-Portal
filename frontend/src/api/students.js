@@ -66,6 +66,46 @@ export const addStudentToDB = async (student) => {
   }
 };
 
+export const bulkAddStudentsToDB = async (students) => {
+  // Check if the student has all the required fields
+
+  students.forEach((student) => {
+    const missingFields = STUDENT_REQUIRED_FIELDS.filter(
+      (key) => !student.hasOwnProperty(key) || student[key] === ""
+    );
+
+    if (missingFields.length > 0) {
+      // Throw error with missing fields
+      throw new Error(`Missing fields: ${missingFields.join(", ")}`);
+    }
+  });
+
+  try {
+    const response = await fetch(`${BASE_URL}/api/students/bulk`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ students }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json(); // parse the error message
+      throw new Error(errorData.error);
+    }
+
+    const newStudents = await response.json();
+    newStudents.forEach((newStudent) => {
+      newStudent.id = newStudent._id; // Convert _id to id
+    });
+
+    return newStudents;
+  } catch (error) {
+    console.error("Error adding student:", error);
+    throw error;
+  }
+};
+
 export const updateStudentToDB = async (id, student) => {
   if (!id) {
     // Throw error of id not provided

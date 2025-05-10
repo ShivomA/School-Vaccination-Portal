@@ -23,6 +23,24 @@ exports.addStudent = async (req, res) => {
   }
 };
 
+// POST /api/students/bulk
+exports.bulkAddStudents = async (req, res) => {
+  const { students } = req.body;
+
+  if (!Array.isArray(students)) {
+    return res.status(400).json({ message: "Invalid students data" });
+  }
+
+  try {
+    const newStudents = await Student.insertMany(students);
+    res.status(201).json(newStudents);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: "Failed to add students", details: error.message });
+  }
+};
+
 // PUT /api/students/:id
 exports.updateStudent = async (req, res) => {
   try {

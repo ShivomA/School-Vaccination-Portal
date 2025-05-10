@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 
 import useAppStore from "../../store/useAppStore";
 import StudentCard from "../../components/StudentCard";
@@ -8,15 +9,23 @@ import {
   downloadStudentsReportCSV,
   downloadStudentsReportExcel,
 } from "../../utils/exportUtils";
-import { fetchStudentsFromDB, fetchStudentsReport } from "../../api/students";
+import {
+  bulkAddStudentsToDB,
+  fetchStudentsFromDB,
+  fetchStudentsReport,
+} from "../../api/students";
 
 const Students = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [isImporting, setIsImporting] = useState(false);
   const [reportType, setReportType] = useState("excel");
 
   const allStudents = useAppStore((state) => state.students);
   const setStudents = useAppStore((state) => state.setStudents);
+  const bulkAddStudentsToStore = useAppStore(
+    (state) => state.bulkAddStudentsToStore
+  );
 
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -68,6 +77,52 @@ const Students = () => {
     })();
   });
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsImporting(true); // Start importing
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        const students = results.data.map((row) => ({
+          name: row.name,
+          age: parseInt(row.age),
+          grade: row.grade,
+          gender: row.gender,
+        }));
+
+        // Optional: validate data
+        const isValid = students.every(
+          (s) =>
+            s.name &&
+            s.grade &&
+            ["Male", "Female"].includes(s.gender) &&
+            Number.isInteger(s.age)
+        );
+
+        if (!isValid) {
+          e.target.value = "";
+          setIsImporting(false);
+          alert("Invalid CSV data");
+          return;
+        }
+
+        try {
+          const newStudents = await bulkAddStudentsToDB(students);
+          bulkAddStudentsToStore(newStudents);
+        } catch (error) {
+          alert("Error adding student: " + error.message);
+        } finally {
+          e.target.value = ""; // Reset after processing
+          setIsImporting(false); // Done importing
+        }
+      },
+    });
+  };
+
   const handleGenerateReport = async () => {
     const reportData = await fetchStudentsReport(filters);
 
@@ -76,10 +131,6 @@ const Students = () => {
     } else if (reportType === "csv") {
       downloadStudentsReportCSV(reportData);
     }
-  };
-
-  const handleAddClick = () => {
-    navigate("./add"); // Navigate to /add route
   };
 
   const handleFilterChange = (e) => {
@@ -131,9 +182,18 @@ const Students = () => {
     );
   };
 
+  const handleAddClick = () => {
+    navigate("./add"); // Navigate to /add route
+  };
+
   return (
     <div>
       <div>Students</div>
+
+      <div>
+        <label>Bulk upload: </label>
+        <input type="file" accept=".csv" onChange={handleFileChange} />
+      </div>
 
       <div>
         <button onClick={handleGenerateReport}>
@@ -167,6 +227,8 @@ const Students = () => {
         </div>
         <button onClick={handleAddClick}>Add student</button>
       </div>
+
+      {isImporting && <p>Importing students...</p>}
 
       {loading ? (
         <div>Loading...</div>

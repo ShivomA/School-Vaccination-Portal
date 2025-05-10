@@ -9,12 +9,16 @@ const useAppStore = create((set) => ({
   students: [],
   setStudents: (students) => set({ students }),
   addStudentToStore: (student) => {
-    set((state) => ({ students: [...state.students, student] }));
+    set((state) => ({ students: [student, ...state.students] }));
     return "Student added successfully";
+  },
+  bulkAddStudentsToStore: (students) => {
+    set((state) => ({ students: [...state.students, ...students] }));
+    return "Students added successfully";
   },
   updateStudentInStore: (id, student) => {
     set((state) => ({
-      students: state.students.map((s) => (s.id === id ? student : s)),
+      students: [student, ...state.students.filter((s) => s.id !== id)],
     }));
     return "Student updated successfully";
   },
