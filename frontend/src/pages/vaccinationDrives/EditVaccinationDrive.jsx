@@ -35,12 +35,22 @@ const EditVaccinationDrive = () => {
     }
   };
 
-  if (!vaccinationDrive) return <div>Vaccination Drive not found</div>;
+  if (!vaccinationDrive) {
+    return (
+      <div className="p-4 text-center text-red-600 font-medium">
+        Vaccination Drive not found
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div>Edit Vaccination Drive: {id}</div>
-      {loading && <div>Updating vaccination drive...</div>}
+    <div className="p-6 max-w-3xl my-2 mx-auto bg-white shadow-lg rounded-lg">
+      <div className="text-2xl font-semibold mb-4">
+        Edit Vaccination Drive: {id}
+      </div>
+      {loading && (
+        <div className="text-gray-500">Updating vaccination drive...</div>
+      )}
       <VaccinationDriveForm
         vaccinationDrive={vaccinationDrive}
         onSubmit={handleUpdateVaccinationDrive}

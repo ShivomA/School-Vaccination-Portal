@@ -96,10 +96,6 @@ const VaccinationDrives = () => {
     }
   };
 
-  const handleAddClick = () => {
-    navigate("./add"); // Navigate to /add route
-  };
-
   const handleFilterChange = (e) => {
     let { type, name, value } = e.target;
     if (type === "number" && value !== "") {
@@ -112,102 +108,167 @@ const VaccinationDrives = () => {
     }));
   };
 
+  const handleAddClick = () => {
+    navigate("./add"); // Navigate to /add route
+  };
+
+  const vaccinationDriveActionsBar = () => {
+    return (
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
+        <div className="flex items-center gap-4">
+          {/* Search by Name */}
+          <div className="flex items-center">
+            <label className="mr-2 text-sm">
+              Search by vaccination drive name:
+            </label>
+            <input
+              type="text"
+              name="driveName"
+              value={filters.driveName}
+              placeholder="Drive name"
+              onChange={handleFilterChange}
+              className="border p-2 rounded-lg w-36"
+            />
+          </div>
+
+          {/* Filters */}
+          <div className="flex items-center">
+            <button
+              onClick={() => setShowFilters((prev) => !prev)}
+              className="text-blue-500 hover:underline"
+            >
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4 flex-wrap">
+          {/* Add Vaccination drive */}
+          <button
+            onClick={handleAddClick}
+            className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+          >
+            Add vaccination drive
+          </button>
+
+          {/* Generate Report */}
+          <div className="flex items-center">
+            <button
+              onClick={handleGenerateReport}
+              className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
+            >
+              Generate Report
+            </button>
+            <select
+              onChange={(e) => setReportType(e.target.value)}
+              value={reportType}
+              className="ml-2 p-2 border rounded-lg"
+            >
+              <option value="excel">Excel</option>
+              <option value="csv">CSV</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const filterPanel = () => {
     return (
-      <div>
-        <input
-          type="text"
-          name="vaccineName"
-          value={filters.vaccineName}
-          placeholder="Vaccine name"
-          onChange={handleFilterChange}
-        />
-        <input
-          type="date"
-          name="driveDate"
-          value={filters.driveDate}
-          placeholder="Drive date"
-          onChange={handleFilterChange}
-        />
-        <input
-          type="text"
-          name="applicableGrade"
-          value={filters.applicableGrade}
-          placeholder="Applicable grade"
-          onChange={handleFilterChange}
-        />
-        <label>
+      <div className="bg-white px-4 pb-4 mb-2 rounded shadow-md grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">
+            Vaccine Name
+          </label>
           <input
-            type="checkbox"
-            name="showPastDrives"
-            checked={filters.showPastDrives}
-            placeholder="Show Past Drives"
-            onChange={(e) => {
-              const checked = e.target.checked;
-
-              setFilters((prevState) => ({
-                ...prevState,
-                showPastDrives: checked,
-              }));
-            }}
+            type="text"
+            name="vaccineName"
+            value={filters.vaccineName}
+            placeholder="Vaccine name"
+            onChange={handleFilterChange}
+            className="border border-gray-300 rounded px-2 py-1 text-sm"
           />
-          Show past drives
-        </label>
+        </div>
+
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">
+            Drive Date
+          </label>
+          <input
+            type="date"
+            name="driveDate"
+            value={filters.driveDate}
+            placeholder="Drive date"
+            onChange={handleFilterChange}
+            className="border border-gray-300 rounded px-2 py-1 text-sm"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label className="text-sm font-medium text-gray-700">
+            Applicable Grade
+          </label>
+          <input
+            type="text"
+            name="applicableGrade"
+            value={filters.applicableGrade}
+            placeholder="Applicable grade"
+            onChange={handleFilterChange}
+            className="border border-gray-300 rounded px-2 py-1 text-sm"
+          />
+        </div>
+
+        <div className="flex items-center space-x-2 mt-6">
+          <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 cursor-pointer">
+            <input
+              type="checkbox"
+              name="showPastDrives"
+              checked={filters.showPastDrives}
+              onChange={(e) =>
+                setFilters((prevState) => ({
+                  ...prevState,
+                  showPastDrives: e.target.checked,
+                }))
+              }
+              className="h-4 w-4 text-blue-600"
+            />
+            <span>Show past drives</span>
+          </label>
+        </div>
       </div>
     );
   };
 
   return (
-    <div>
-      <div>Vaccination Drives</div>
+    <div className="min-h-[calc(100vh-3.5rem)] bg-blue-50 px-4 py-6 sm:px-6 lg:px-8">
+      <h1 className="text-2xl font-bold text-blue-800 mb-6">
+        Vaccination drives
+      </h1>
 
-      <div>
-        <button onClick={handleGenerateReport}>
-          Generate & Download Report
-        </button>
+      {/* Vaccination Drive Actions Bar */}
+      {vaccinationDriveActionsBar()}
 
-        <select
-          onChange={(e) => setReportType(e.target.value)}
-          value={reportType}
-        >
-          <option value="excel">Excel</option>
-          <option value="csv">CSV</option>
-        </select>
+      {/* Filter Panel (visible when Show Filters is true) */}
+      {showFilters && filterPanel()}
+
+      {/* Vaccination drive Cards */}
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {loading ? (
+          <div className="text-blue-600 font-medium animate-pulse">
+            Loading...
+          </div>
+        ) : filteredVaccinationDrives.length ? (
+          filteredVaccinationDrives.map((vaccinationDrive) => (
+            <VaccinationDriveCard
+              key={vaccinationDrive.id}
+              vaccinationDrive={vaccinationDrive}
+              showEditOption={true}
+            />
+          ))
+        ) : (
+          <div className="text-gray-500">No vaccination drive found</div>
+        )}
       </div>
-
-      <div>
-        <div>
-          <label>Search by vaccination drive name: </label>
-          <input
-            type="text"
-            name="driveName"
-            value={filters.driveName}
-            placeholder="Vaccination drive name"
-            onChange={handleFilterChange}
-          />
-        </div>
-        <div>
-          <button onClick={() => setShowFilters((prev) => !prev)}>
-            {showFilters ? "Hide Filters" : "Show Filters"}
-          </button>
-          {showFilters && filterPanel()}
-        </div>
-        <button onClick={handleAddClick}>Add vaccination drive</button>
-      </div>
-
-      {loading ? (
-        <div>Loading...</div>
-      ) : filteredVaccinationDrives.length ? (
-        filteredVaccinationDrives.map((vaccinationDrive) => (
-          <VaccinationDriveCard
-            key={vaccinationDrive.id}
-            vaccinationDrive={vaccinationDrive}
-            showEditOption={true}
-          />
-        ))
-      ) : (
-        <div>No vaccination drive found</div>
-      )}
     </div>
   );
 };

@@ -15,49 +15,74 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const authToken = await handleLogin({ username, password });
-
     if (authToken) login(authToken);
     else setError("Incorrect username or password");
   };
 
   return (
-    <div>
-      <div>Title</div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <div>Username:</div>
-          <input
-            type="text"
-            id="username"
-            placeholder="Username"
-            autoComplete="username"
-            value={username}
-            maxLength={16}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <div>Password</div>
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            autoComplete="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error ? (
-          <div>{error}</div>
-        ) : (
-          <div>{"Demo Login: Username: admin{number} Password: admin"}</div>
-        )}
-        <button type="submit">Login</button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-blue-800 mb-6 text-center">
+          Login
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-blue-700 mb-1"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Enter your username"
+              autoComplete="username"
+              maxLength={16}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-blue-700 mb-1"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full border border-blue-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {error ? (
+            <div className="text-sm text-red-600">{error}</div>
+          ) : (
+            <div className="text-sm text-gray-600">
+              Demo Login: Username: <b>admin</b>, Password: <b>admin</b>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          >
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

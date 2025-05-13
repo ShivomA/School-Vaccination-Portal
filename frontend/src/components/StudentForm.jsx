@@ -42,52 +42,70 @@ const StudentForm = ({ student, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label>*Name: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Name:
+        </label>
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
+
       <div>
-        <label>*Age: </label>
+        <label className="block text-sm font-medium text-gray-700">*Age:</label>
         <input
           type="number"
           name="age"
           value={formData.age}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
+
       <div>
-        <label>*Grade: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Grade:
+        </label>
         <input
           type="text"
           name="grade"
           value={formData.grade}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
-      <div>
-        <label>*Gender: </label>
 
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          *Gender:
+        </label>
         <select
           name="gender"
           value={formData.gender}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         >
           <option value="">Gender</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
       </div>
-      <button type="submit">{student ? "Update" : "Add"} Student</button>
+
+      <button
+        type="submit"
+        className="w-full py-2 px-4 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+      >
+        {student ? "Update" : "Add"} Student
+      </button>
     </form>
   );
 };

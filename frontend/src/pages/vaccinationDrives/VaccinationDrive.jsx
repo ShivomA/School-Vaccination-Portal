@@ -39,7 +39,7 @@ const VaccinationDrive = () => {
         const fetchedVaccinationDrive = await fetchVaccinationDriveById(id);
         setSelectedVaccinationDrive(fetchedVaccinationDrive);
       } catch (error) {
-        alert("Error getting vaccination drive: " + error.message);
+        console.log("Error getting vaccination drive: " + error.message);
       } finally {
         setDriveLoading(false);
       }
@@ -67,30 +67,50 @@ const VaccinationDrive = () => {
     })();
   });
 
-  if (!vaccinationDrive) return <div>Vaccination Drive not found</div>;
+  if (!vaccinationDrive) {
+    return (
+      <div className="p-4 text-center text-red-600 font-medium">
+        Vaccination Drive not found
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div>Vaccination Drive: {id}</div>
+    <div className="min-h-[calc(100vh-3.5rem)] bg-blue-50 px-4 py-6 sm:px-6 lg:px-8 space-y-6">
+      {/* Header */}
+      <div className="text-lg font-semibold text-gray-800">
+        Vaccination Drive ID: {id}
+      </div>
+
+      {/* Vaccination Drive Card */}
       <VaccinationDriveCard
         key={vaccinationDrive.id}
         vaccinationDrive={vaccinationDrive}
       />
 
-      {studentsLoading ? (
-        <div>Getting students details...</div>
-      ) : applicableStudents.length ? (
-        applicableStudents.map((student) => (
-          <StudentCard
-            key={student.id}
-            student={student}
-            drive={vaccinationDrive}
-            showVaccinationOption={true}
-          />
-        ))
-      ) : (
-        <div>No applicable student found</div>
-      )}
+      {/* Student Section */}
+      <div>
+        <h2 className="text-md font-medium text-gray-700 mb-2">
+          Applicable Students
+        </h2>
+
+        {studentsLoading ? (
+          <div className="text-yellow-600">Getting student details...</div>
+        ) : applicableStudents.length ? (
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {applicableStudents.map((student) => (
+              <StudentCard
+                key={student.id}
+                student={student}
+                drive={vaccinationDrive}
+                showVaccinationOption={true}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-gray-500">No applicable student found</div>
+        )}
+      </div>
     </div>
   );
 };

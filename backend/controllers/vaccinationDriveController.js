@@ -50,16 +50,18 @@ exports.updateDrive = async (req, res) => {
   try {
     const { driveDate } = req.body;
 
-    // Validate: Date should be at least 15 days in future
-    const dateDiff = new Date(driveDate) - new Date();
-    if (dateDiff < 15 * 24 * 60 * 60 * 1000) {
-      return res.status(400).json({
-        error: "Drive must be scheduled at least 15 days in advance.",
-      });
-    }
-
     const drive = await VaccinationDrive.findById(req.params.id);
     if (!drive) return res.status(404).json({ error: "Drive not found" });
+
+    if (new Date(drive.driveDate).getTime() !== new Date(driveDate).getTime()) {
+      // Validate: Date should be at least 15 days in future
+      const dateDiff = new Date(driveDate) - new Date(drive.driveDate);
+      if (dateDiff < 15 * 24 * 60 * 60 * 1000) {
+        return res.status(400).json({
+          error: "Drive must be scheduled at least 15 days in advance.",
+        });
+      }
+    }
 
     if (new Date(drive.driveDate) < new Date()) {
       return res.status(403).json({ error: "Past drives cannot be edited" });

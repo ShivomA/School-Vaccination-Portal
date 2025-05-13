@@ -56,68 +56,95 @@ const VaccinationDriveForm = ({ vaccinationDrive, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label>*Drive name: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Drive name:
+        </label>
         <input
           type="text"
           name="driveName"
           value={formData.driveName}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
+
       <div>
-        <label>*Vaccine name: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Vaccine name:
+        </label>
         <input
           type="text"
           name="vaccineName"
           value={formData.vaccineName}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
+
       <div>
-        <label>*Drive date: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Drive date:
+        </label>
         <input
           type="date"
           name="driveDate"
           value={formData.driveDate}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
+
       <div>
-        <label>*Location: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Location:
+        </label>
         <input
           type="text"
           name="location"
           value={formData.location}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
+
       <div>
-        <label>*Applicable grades: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Applicable grades:
+        </label>
         <input
           type="text"
           name="applicableGrades"
           value={formData.applicableGrades}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
+
       <div>
-        <label>*Available doses: </label>
+        <label className="block text-sm font-medium text-gray-700">
+          *Available doses:
+        </label>
         <input
           type="number"
           name="availableDoses"
           value={formData.availableDoses}
           onChange={handleChange}
           required
+          className="mt-1 p-2 border border-gray-300 rounded-md w-full"
         />
       </div>
-      <button type="submit">
+
+      <button
+        type="submit"
+        className="w-full py-2 px-4 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+      >
         {vaccinationDrive ? "Update" : "Add"} Vaccination Drive
       </button>
     </form>

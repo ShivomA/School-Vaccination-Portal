@@ -32,12 +32,18 @@ const EditStudent = () => {
     }
   };
 
-  if (!student) return <div>Student not found</div>;
+  if (!student) {
+    return (
+      <div className="p-4 text-center text-red-600 font-medium">
+        Student not found
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div>Edit Student: {id}</div>
-      {loading && <div>Updating student...</div>}
+    <div className="p-6 max-w-3xl my-2 mx-auto bg-white shadow-lg rounded-lg">
+      <div className="text-2xl font-semibold mb-4">Edit Student: {id}</div>
+      {loading && <div className="text-gray-500">Updating student...</div>}
       <StudentForm student={student} onSubmit={handleUpdateStudent} />
     </div>
   );

@@ -25,7 +25,10 @@ exports.getStudentsReport = async (req, res) => {
     }
 
     if (vaccineTaken) {
-      query["vaccineTaken.vaccineName"] = vaccineTaken;
+      query["vaccineTaken.vaccineName"] = {
+        $regex: vaccineTaken,
+        $options: "i",
+      };
     }
 
     const students = await Student.find(query).sort({ lastUpdated: -1 }).lean();

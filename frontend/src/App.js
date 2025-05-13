@@ -21,7 +21,11 @@ import NotFound from "./pages/NotFound";
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  return isAuthenticated ? (
+    <div className="pt-14">{children}</div>
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 function App() {

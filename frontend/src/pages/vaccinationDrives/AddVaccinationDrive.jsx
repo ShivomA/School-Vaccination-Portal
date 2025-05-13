@@ -31,9 +31,13 @@ const AddVaccinationDrive = () => {
   };
 
   return (
-    <div>
-      <div>Add New Vaccination Drive</div>
-      {loading && <div>Adding vaccination drive...</div>}
+    <div className="p-6 max-w-3xl my-2 mx-auto bg-white shadow-lg rounded-lg">
+      <div className="text-2xl font-semibold mb-4">
+        Add New Vaccination Drive
+      </div>
+      {loading && (
+        <div className="text-gray-500">Adding vaccination drive...</div>
+      )}
       <VaccinationDriveForm onSubmit={handleAddVaccinationDrive} />
     </div>
   );

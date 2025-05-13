@@ -27,9 +27,9 @@ const AddStudent = () => {
   };
 
   return (
-    <div>
-      <div>Add New Student</div>
-      {loading && <div>Adding student...</div>}
+    <div className="p-6 max-w-3xl my-2 mx-auto bg-white shadow-lg rounded-lg">
+      <div className="text-2xl font-semibold mb-4">Add New Student</div>
+      {loading && <div className="text-gray-500">Adding student...</div>}
       <StudentForm onSubmit={handleAddStudent} />
     </div>
   );
